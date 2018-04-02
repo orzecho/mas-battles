@@ -1,21 +1,28 @@
 package eu.mdabrowski.battles.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+
+import com.sun.istack.internal.NotNull;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.validation.constraints.NotBlank;
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Document(collection = "baseEntities")
+@Builder
+@Entity
 public class Team extends BaseEntity {
 
-    @NotBlank
+    @NotNull
     private String name;
 
-    private Set<User> users;
+    @OneToMany
+    private Set<User> users = new HashSet<>();
 }
