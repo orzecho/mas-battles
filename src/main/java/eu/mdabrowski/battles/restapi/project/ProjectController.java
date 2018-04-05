@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import eu.mdabrowski.battles.domain.Project;
 import eu.mdabrowski.battles.persistance.ProjectRepository;
-import eu.mdabrowski.battles.persistance.TeamRepository;
 import eu.mdabrowski.battles.restapi.wrapper.ResponseListWrapper;
 import eu.mdabrowski.battles.restapi.wrapper.ResponseWrapper;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +37,7 @@ public class ProjectController {
         List<ProjectDTO> projectDTOs = projects.stream()
                 .map(projectMapper::toDTO)
                 .collect(Collectors.toList());
-        return new ResponseListWrapper<>(projectDTOs, "projects");
+        return new ResponseListWrapper<>(projectDTOs, Project.LABEL_PLURAL);
     }
 
     @GetMapping("/{id}")
@@ -46,23 +45,23 @@ public class ProjectController {
         return new ResponseWrapper<>(projectRepository
                 .findById(id)
                 .map(projectMapper::toDTO)
-                .orElseThrow(EntityNotFoundException::new), "project");
+                .orElseThrow(EntityNotFoundException::new), Project.LABEL_SINGULAR);
     }
 
     @PostMapping
     public ResponseWrapper<ProjectDTO> createProject(@Valid @RequestBody Map<String, ProjectDTO> projectDTO) {
-        Project project = projectMapper.fromDTO(projectDTO.get("project"));
+        Project project = projectMapper.fromDTO(projectDTO.get(Project.LABEL_SINGULAR));
         Project savedProject = projectRepository.save(project);
         ProjectDTO savedProjectDTO = projectMapper.toDTO(savedProject);
-        return new ResponseWrapper<>(savedProjectDTO, "project");
+        return new ResponseWrapper<>(savedProjectDTO, Project.LABEL_SINGULAR);
     }
 
     @PutMapping("/{id}")
     public ResponseWrapper<ProjectDTO> updateProject(@PathVariable Long id, @Valid @RequestBody Map<String, ProjectDTO>
             projectDTO) {
         Project oldProject = projectRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Project updatedProject = projectRepository.save(projectMapper.update(projectDTO.get("project"), oldProject));
-        return new ResponseWrapper<>(projectMapper.toDTO(updatedProject), "project");
+        Project updatedProject = projectRepository.save(projectMapper.update(projectDTO.get(Project.LABEL_SINGULAR), oldProject));
+        return new ResponseWrapper<>(projectMapper.toDTO(updatedProject), Project.LABEL_SINGULAR);
     }
 
     @DeleteMapping("/{id}")

@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class TeamMapper {
 
     private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
 
     public TeamDTO toDTO(Team team) {
         return TeamDTO.builder()
@@ -36,11 +37,10 @@ public class TeamMapper {
     }
 
     public Team fromDTO(TeamDTO teamDTO) {
-        Team team = Team.builder()
+        return Team.builder()
                 .name(teamDTO.getName())
                 .users(getUsersFromIds(teamDTO.getUsers(), userRepository))
                 .build();
-        return team;
     }
 
     private Set<User> getUsersFromIds(Set<Long> ids, JpaRepository<User, Long> repository) {
@@ -52,6 +52,17 @@ public class TeamMapper {
     }
 
     public Team update(TeamDTO teamDTO, Team team) {
+        Team teamFromDTO = fromDTO(teamDTO);
+
+        team.setName(teamFromDTO.getName());
+        team.setUsers(teamFromDTO.getUsers());
+
+        return team;
+    }
+
+    //MAS
+    public Team update(TeamDTO teamDTO, Long teamId) {
+        Team team = teamRepository.findById(teamId).orElseThrow(EntityNotFoundException::new);
         Team teamFromDTO = fromDTO(teamDTO);
 
         team.setName(teamFromDTO.getName());

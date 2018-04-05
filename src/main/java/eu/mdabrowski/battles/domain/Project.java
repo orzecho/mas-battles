@@ -22,6 +22,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 public class Project extends BaseEntity implements Votable, Commentable, Taggable {
+    public static final String LABEL_SINGULAR = "project";
+    public static final String LABEL_PLURAL = "projects";
+
     @NotBlank
     private String name;
 
@@ -38,4 +41,15 @@ public class Project extends BaseEntity implements Votable, Commentable, Taggabl
 
     @ManyToMany
     private Set<Tag> tags = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "name='" + name + '\'' +
+                ", team=" + team +
+                ", votes=" + votes +
+                ", comments=" + comments +
+                ", tags=" + tags +
+                '}';
+    }
 }

@@ -39,14 +39,13 @@ public class ProjectMapper {
     }
 
     public Project fromDTO(ProjectDTO projectDTO) {
-        Project project = Project.builder()
+        return Project.builder()
                 .name(projectDTO.getName())
                 .comments(getCommentsFromIds(projectDTO.getComments(), commentRepository))
                 .tags(getTagsFromIds(projectDTO.getTags(), tagRepository))
-                .team(teamRepository.findById(projectDTO.getTeam()).orElseThrow(EntityNotFoundException::new))
+                .team(Optional.ofNullable(projectDTO.getTeam()).map(teamId -> teamRepository.findById(teamId)
+                        .orElseThrow(EntityNotFoundException::new)).orElse(null))
                 .build();
-        Optional.ofNullable(projectDTO.getId()).ifPresent(project::setId);
-        return project;
     }
 
     private Set<Comment> getCommentsFromIds(Set<Long> ids, JpaRepository<Comment, Long> repository) {
