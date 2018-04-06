@@ -1,6 +1,7 @@
-package eu.mdabrowski.battles.domain;
+package eu.mdabrowski.battles.restapi.tag;
 
-import javax.persistence.Entity;
+import java.util.Set;
+
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -8,12 +9,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-@Entity
 @Builder
-public class Tag extends BaseEntity {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class TagDTO {
+    private Long id;
+
     @NotNull
     private String name;
 }
