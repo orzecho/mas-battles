@@ -2,7 +2,7 @@ package eu.mdabrowski.battles.restapi.team;
 
 import java.util.Set;
 
-import com.sun.istack.internal.NotNull;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
