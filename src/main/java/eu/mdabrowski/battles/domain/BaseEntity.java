@@ -1,6 +1,5 @@
 package eu.mdabrowski.battles.domain;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.GeneratedValue;
