@@ -1,5 +1,6 @@
 package eu.mdabrowski.battles.restapi.project;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -8,6 +9,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +34,8 @@ public class ProjectController {
     private final ProjectMapper projectMapper;
 
     @GetMapping
-    public ResponseListWrapper<ProjectDTO> getProjects() {
+    @PreAuthorize("permitAll()")
+    public ResponseListWrapper<ProjectDTO> getProjects(Principal principal) {
         List<Project> projects = projectRepository.findAll();
         List<ProjectDTO> projectDTOs = projects.stream()
                 .map(projectMapper::toDTO)
@@ -41,6 +44,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("permitAll()")
     public ResponseWrapper<ProjectDTO> getProject(@PathVariable Long id) {
         return new ResponseWrapper<>(projectRepository
                 .findById(id)
@@ -49,6 +53,7 @@ public class ProjectController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
     public ResponseWrapper<ProjectDTO> createProject(@Valid @RequestBody Map<String, ProjectDTO> projectDTO) {
         Project project = projectMapper.fromDTO(projectDTO.get(Project.LABEL_SINGULAR));
         Project savedProject = projectRepository.save(project);
@@ -57,6 +62,7 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
     public ResponseWrapper<ProjectDTO> updateProject(@PathVariable Long id, @Valid @RequestBody Map<String, ProjectDTO>
             projectDTO) {
         Project oldProject = projectRepository.findById(id).orElseThrow(EntityNotFoundException::new);
@@ -65,6 +71,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
     public ResponseEntity deleteProject(@PathVariable Long id) {
         projectRepository.deleteById(id);
         return ResponseEntity.ok().build();

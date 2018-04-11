@@ -1,0 +1,24 @@
+keycloak-client:
+  server-url: http://localhost:8180/auth
+  realm: nk
+
+spring:
+    security:
+        oauth2:
+            client:
+                registration:
+                    nk:
+                        client-id: battles
+                        client-secret: 0f4400f8-ffde-4cff-a6b2-2d02560003b8
+                        client-name: keycloak
+                        provider: keycloak
+                        scope: openid, profile
+                        redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
+                        authorization-grant-type: authorization_code
+                provider:
+                    keycloak:
+                        token-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/token
+                        authorization-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/auth
+                        user-info-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/userinfo
+                        jwk-set-uri: ${keycloak-client.server-url}/realms/${keycloak-client.realm}/protocol/openid-connect/certs
+                        user-name-attribute: preferred_username

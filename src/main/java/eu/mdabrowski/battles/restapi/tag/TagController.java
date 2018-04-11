@@ -8,6 +8,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +50,7 @@ public class TagController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
     public ResponseWrapper<TagDTO> createTag(@Valid @RequestBody Map<String, TagDTO> tagDTO) {
         Tag tag = tagMapper.fromDTO(tagDTO.get("tag"));
         Tag savedTag = tagRepository.save(tag);
@@ -57,6 +59,7 @@ public class TagController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
     public ResponseWrapper<TagDTO> updateTag(@PathVariable Long id, @Valid @RequestBody Map<String, TagDTO>
             projectDTO) {
         Tag oldTag = tagRepository.findById(id).orElseThrow(EntityNotFoundException::new);
@@ -65,6 +68,7 @@ public class TagController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
     public ResponseEntity deleteTag(@PathVariable Long id) {
         tagRepository.deleteById(id);
         return ResponseEntity.ok().build();

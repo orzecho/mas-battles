@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -19,6 +21,8 @@ import eu.mdabrowski.battles.persistance.CommentRepository;
 import eu.mdabrowski.battles.persistance.UserRepository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @Transactional
+@WithMockUser
 public class CommentControllerTest {
 
     private final String URL = "/comments";
@@ -103,6 +108,8 @@ public class CommentControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(delete(URL + "//" + comment.getId())
+                .with(csrf())
+                .with(user("test").roles("BATTLE_USER"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         //then
@@ -121,6 +128,8 @@ public class CommentControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(put(URL + "//" + comment.getId())
+                .with(csrf())
+                .with(user("test").roles("BATTLE_USER"))
                 .content("{\"comment\":{\"content\":\"Test2\", \"user\": " + user.getId() + "}}")
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
@@ -133,10 +142,13 @@ public class CommentControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"USER"})
     public void createTest() throws Exception{
         //given
         //when
         ResultActions resultActions = mockMvc.perform(post(URL)
+                .with(csrf())
+                .with(user("test").roles("BATTLE_USER"))
                 .content("{\"comment\":{\"content\":\"Test\", \"user\": " + user.getId() + "}}")
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 

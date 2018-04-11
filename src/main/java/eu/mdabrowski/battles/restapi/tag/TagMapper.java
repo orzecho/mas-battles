@@ -36,7 +36,7 @@ public class TagMapper {
         return tag;
     }
 
-    //MAS
+    //MAS przeciążanie
     public Tag update(TagDTO tagDTO, Long tagId) {
         Tag tag = tagRepository.findById(tagId).orElseThrow(EntityNotFoundException::new);
         Tag tagFromDTO = fromDTO(tagDTO);

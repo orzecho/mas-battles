@@ -8,6 +8,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +50,7 @@ public class CommentController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
     public ResponseWrapper<CommentDTO> createComment(@Valid @RequestBody Map<String, CommentDTO> commentDTO) {
         Comment comment = commentMapper.fromDTO(commentDTO.get("comment"));
         Comment savedComment = commentRepository.save(comment);
@@ -57,6 +59,7 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
     public ResponseWrapper<CommentDTO> updateComment(@PathVariable Long id, @Valid @RequestBody Map<String, CommentDTO>
             projectDTO) {
         Comment oldComment = commentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
@@ -65,6 +68,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
     public ResponseEntity deleteComment(@PathVariable Long id) {
         commentRepository.deleteById(id);
         return ResponseEntity.ok().build();

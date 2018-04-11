@@ -16,6 +16,8 @@ import eu.mdabrowski.battles.domain.Team;
 import eu.mdabrowski.battles.persistance.TeamRepository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -85,6 +87,8 @@ public class TeamControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(delete(URL + "//" + team.getId())
+                .with(csrf())
+                .with(user("test").roles("BATTLE_USER"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         //then
@@ -102,6 +106,8 @@ public class TeamControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(put(URL + "//" + team.getId())
+                .with(csrf())
+                .with(user("test").roles("BATTLE_USER"))
                 .content("{\"team\":{\"name\":\"Test2\"}}")
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
@@ -117,6 +123,8 @@ public class TeamControllerTest {
         //given
         //when
         ResultActions resultActions = mockMvc.perform(post(URL)
+                .with(csrf())
+                .with(user("test").roles("BATTLE_USER"))
                 .content("{\"team\":{\"name\":\"Test\"}}")
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 

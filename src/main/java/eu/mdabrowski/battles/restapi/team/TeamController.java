@@ -8,6 +8,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +51,7 @@ public class TeamController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
     public ResponseWrapper<TeamDTO> createTeam(@Valid @RequestBody Map<String, TeamDTO> teamDTO) {
         Team team = teamMapper.fromDTO(teamDTO.get("team"));
         Team savedTeam = teamRepository.save(team);
@@ -58,6 +60,7 @@ public class TeamController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
     public ResponseWrapper<TeamDTO> updateTeam(@PathVariable Long id, @Valid @RequestBody Map<String, TeamDTO>
             projectDTO) {
         Team oldTeam = teamRepository.findById(id).orElseThrow(EntityNotFoundException::new);
@@ -66,6 +69,7 @@ public class TeamController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
     public ResponseEntity deleteTeam(@PathVariable Long id) {
         teamRepository.deleteById(id);
         return ResponseEntity.ok().build();

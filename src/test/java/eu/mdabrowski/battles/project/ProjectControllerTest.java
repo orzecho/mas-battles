@@ -19,6 +19,8 @@ import eu.mdabrowski.battles.persistance.ProjectRepository;
 import eu.mdabrowski.battles.persistance.TeamRepository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -60,7 +62,9 @@ public class ProjectControllerTest {
         projectRepository.save(project);
 
         //when
-        ResultActions resultActions = mockMvc.perform(get(URL).contentType(MediaType.APPLICATION_JSON_VALUE));
+        ResultActions resultActions = mockMvc.perform(get(URL).contentType
+                (MediaType
+                .APPLICATION_JSON_VALUE));
 
         //then
         resultActions.andExpect(status().isOk())
@@ -101,6 +105,8 @@ public class ProjectControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(delete(URL + "//" + project.getId())
+                .with(csrf())
+                .with(user("test").roles("BATTLE_USER"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         //then
@@ -119,6 +125,8 @@ public class ProjectControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(put(URL + "//" + project.getId())
+                .with(csrf())
+                .with(user("test").roles("BATTLE_USER"))
                 .content("{\"project\":{\"name\":\"Test2\"}}")
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
@@ -134,6 +142,8 @@ public class ProjectControllerTest {
         //given
         //when
         ResultActions resultActions = mockMvc.perform(post(URL)
+                .with(csrf())
+                .with(user("test").roles("BATTLE_USER"))
                 .content("{\"project\":{\"name\":\"Test\",\"team\":" + team.getId() + "}}")
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
