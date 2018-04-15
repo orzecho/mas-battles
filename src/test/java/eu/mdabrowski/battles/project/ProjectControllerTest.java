@@ -127,7 +127,7 @@ public class ProjectControllerTest {
         ResultActions resultActions = mockMvc.perform(put(URL + "//" + project.getId())
                 .with(csrf())
                 .with(user("test").roles("BATTLE_USER"))
-                .content("{\"project\":{\"name\":\"Test2\"}}")
+                .content("{\"project\":{\"name\":\"Test2\", \"team\": " + team.getId() + "}}")
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         //then
