@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import eu.mdabrowski.battles.domain.Project;
+import eu.mdabrowski.battles.domain.Team;
 import eu.mdabrowski.battles.persistance.ProjectRepository;
+import eu.mdabrowski.battles.persistance.TeamRepository;
 import eu.mdabrowski.battles.restapi.wrapper.ResponseListWrapper;
 import eu.mdabrowski.battles.restapi.wrapper.ResponseWrapper;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/projects")
 public class ProjectController {
+
+    private final TeamRepository teamRepository;
 
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
@@ -62,9 +66,10 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
+//    @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseWrapper<ProjectDTO> updateProject(@PathVariable Long id, @Valid @RequestBody Map<String, ProjectDTO>
-            projectDTO) {
+            projectDTO, Principal principal) {
         Project oldProject = projectRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         Project updatedProject = projectRepository.save(projectMapper.update(projectDTO.get(Project.LABEL_SINGULAR), oldProject));
         return new ResponseWrapper<>(projectMapper.toDTO(updatedProject), Project.LABEL_SINGULAR);
@@ -75,5 +80,14 @@ public class ProjectController {
     public ResponseEntity deleteProject(@PathVariable Long id) {
         projectRepository.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/test")
+    @PreAuthorize("permitAll()")
+    public boolean test() {
+        Team team = teamRepository.save(Team.builder().name("Testowa drużyna").build());
+        Project project = Project.builder().name("Test").team(team).build();
+        projectRepository.save(project);
+        return true;
     }
 }

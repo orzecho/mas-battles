@@ -32,6 +32,7 @@ public class ProjectMapper {
         return ProjectDTO.builder()
                 .id(project.getId())
                 .name(project.getName())
+                .team(project.getTeam().getId())
                 .comments(setToIds(project.getComments()))
                 .tags(setToIds(project.getTags()))
                 .votes(setToIds(project.getVotes()))
@@ -41,6 +42,7 @@ public class ProjectMapper {
     public Project fromDTO(ProjectDTO projectDTO) {
         return Project.builder()
                 .name(projectDTO.getName())
+                .team(teamRepository.findById(projectDTO.getTeam()).orElseThrow(EntityNotFoundException::new))
                 .comments(getCommentsFromIds(projectDTO.getComments(), commentRepository))
                 .tags(getTagsFromIds(projectDTO.getTags(), tagRepository))
                 .team(Optional.ofNullable(projectDTO.getTeam()).map(teamId -> teamRepository.findById(teamId)

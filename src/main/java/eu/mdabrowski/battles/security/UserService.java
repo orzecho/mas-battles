@@ -17,7 +17,7 @@ public class UserService {
 
     public Set<GrantedAuthority> getGrantedAuthorities(String username) {
         Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        authorities.add(new SimpleGrantedAuthority("ROLE_BATTLE_USER"));
         return authorities;
     }
 }
