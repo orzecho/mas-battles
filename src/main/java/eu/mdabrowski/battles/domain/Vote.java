@@ -23,4 +23,12 @@ public class Vote extends BaseEntity {
 
     @NotNull
     private Integer value;
+
+    @ManyToOne
+    @JoinColumn(name = "battle_id")
+    private Battle battle;
+
+    @ManyToOne
+    @JoinColumn(name = "topic_id")
+    private Topic topic;
 }

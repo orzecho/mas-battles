@@ -41,15 +41,4 @@ public class Project extends BaseEntity implements Votable, Commentable, Taggabl
 
     @ManyToMany
     private Set<Tag> tags = new HashSet<>();
-
-    @Override
-    public String toString() {
-        return "Project{" +
-                "name='" + name + '\'' +
-                ", team=" + team +
-                ", votes=" + votes +
-                ", comments=" + comments +
-                ", tags=" + tags +
-                '}';
-    }
 }

@@ -20,4 +20,12 @@ public class Comment extends BaseEntity {
     private User user;
 
     private String content;
+
+    @ManyToOne
+    @JoinColumn( name = "battle_id")
+    private Battle battle;
+
+    @ManyToOne
+    @JoinColumn( name = "topic_id")
+    private Topic topic;
 }
