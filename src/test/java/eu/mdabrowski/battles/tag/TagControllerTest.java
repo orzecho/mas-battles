@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import eu.mdabrowski.battles.AcceptanceTest;
 import eu.mdabrowski.battles.domain.Tag;
 import eu.mdabrowski.battles.persistance.TagRepository;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,23 +30,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @Transactional
-public class TagControllerTest {
+public class TagControllerTest extends AcceptanceTest {
 
     private final String URL = "/tags";
-
-    @Autowired
-    protected MockMvc mockMvc;
-
-    @Autowired
-    private TagRepository tagRepository;
 
     @Test
     public void findAllTest() throws Exception{
         //given
-        Tag tag = Tag.builder()
-                .name("Test")
-                .build();
-        tagRepository.save(tag);
 
         //when
         ResultActions resultActions = mockMvc.perform(get(URL).contentType(MediaType.APPLICATION_JSON_VALUE));
@@ -61,10 +52,6 @@ public class TagControllerTest {
     @Test
     public void findOneTest() throws Exception{
         //given
-        Tag tag = Tag.builder()
-                .name("Test")
-                .build();
-        tag = tagRepository.save(tag);
 
         //when
         ResultActions resultActions = mockMvc.perform(get(URL + "//" + tag.getId())
@@ -80,10 +67,6 @@ public class TagControllerTest {
     @Test
     public void deleteTest() throws Exception{
         //given
-        Tag tag = Tag.builder()
-                .name("Test")
-                .build();
-        tag = tagRepository.save(tag);
 
         //when
         ResultActions resultActions = mockMvc.perform(delete(URL + "//" + tag.getId())
@@ -99,10 +82,6 @@ public class TagControllerTest {
     @Test
     public void updateTest() throws Exception{
         //given
-        Tag tag = Tag.builder()
-                .name("Test")
-                .build();
-        tag = tagRepository.save(tag);
 
         //when
         ResultActions resultActions = mockMvc.perform(put(URL + "//" + tag.getId())

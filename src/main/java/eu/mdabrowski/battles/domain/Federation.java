@@ -2,31 +2,25 @@ package eu.mdabrowski.battles.domain;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Builder
 @Entity
-public class Topic extends BaseEntity implements Votable, Commentable{
-    private String value;
+public class Federation extends BaseEntity{
+    private String name;
 
-    @OneToMany
-    private Set<Vote> votes;
-
-    @OneToMany
-    private Set<Comment> comments;
-
-    @OneToMany
-    private Set<Battle> battles;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FederatedTeam> federatedTeams;
 }

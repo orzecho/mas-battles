@@ -6,7 +6,6 @@ import javax.persistence.ManyToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,18 +16,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Builder
-public class Comment extends BaseEntity {
+public class UserRole extends BaseEntity{
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
-    private String content;
-
     @ManyToOne
-    @JoinColumn( name = "battle_id")
-    private Battle battle;
-
-    @ManyToOne
-    @JoinColumn( name = "topic_id")
-    private Topic topic;
+    @JoinColumn(name = "role_id")
+    private Role role;
 }

@@ -1,19 +1,11 @@
 package eu.mdabrowski.battles.team;
 
-import javax.transaction.Transactional;
-
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import eu.mdabrowski.battles.AcceptanceTest;
 import eu.mdabrowski.battles.domain.Team;
-import eu.mdabrowski.battles.persistance.TeamRepository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -25,19 +17,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
-@AutoConfigureMockMvc
-@Transactional
-public class TeamControllerTest {
+public class TeamControllerTest extends AcceptanceTest {
 
     private final String URL = "/teams";
-
-    @Autowired
-    protected MockMvc mockMvc;
-
-    @Autowired
-    private TeamRepository teamRepository;
 
     @Test
     public void findAllTest() throws Exception{
@@ -54,7 +36,7 @@ public class TeamControllerTest {
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.teams", hasSize(1)))
                 .andExpect(jsonPath("$.teams[0].id").exists())
-                .andExpect(jsonPath("$.teams[0].name").value("Test"));
+                .andExpect(jsonPath("$.teams[0].name").value("Test Team"));
     }
 
 

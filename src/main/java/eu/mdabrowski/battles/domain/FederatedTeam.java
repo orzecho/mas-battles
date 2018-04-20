@@ -1,34 +1,33 @@
 package eu.mdabrowski.battles.domain;
 
+import java.time.LocalDate;
+
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Getter
+@Setter
 @Builder
-public class Comment extends BaseEntity {
-    @ManyToOne
-    @JoinColumn(name="user_id")
-    private User user;
+@Entity
+public class FederatedTeam extends BaseEntity {
+    private LocalDate startDate;
 
-    private String content;
-
-    @ManyToOne
-    @JoinColumn( name = "battle_id")
-    private Battle battle;
+    private LocalDate endDate;
 
     @ManyToOne
-    @JoinColumn( name = "topic_id")
-    private Topic topic;
+    @JoinColumn(name="team_id")
+    private Team team;
+
+    @ManyToOne
+    @JoinColumn(name="federation_id")
+    private Federation federation;
 }

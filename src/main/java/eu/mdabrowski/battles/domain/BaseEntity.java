@@ -10,12 +10,15 @@ import javax.persistence.PreUpdate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
-@Data
+@Getter
+@Setter
 public abstract class BaseEntity {
     @Id
     @GeneratedValue

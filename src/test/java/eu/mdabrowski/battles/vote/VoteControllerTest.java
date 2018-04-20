@@ -1,22 +1,11 @@
 package eu.mdabrowski.battles.vote;
 
-import javax.transaction.Transactional;
-
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import eu.mdabrowski.battles.domain.User;
+import eu.mdabrowski.battles.AcceptanceTest;
 import eu.mdabrowski.battles.domain.Vote;
-import eu.mdabrowski.battles.persistance.UserRepository;
-import eu.mdabrowski.battles.persistance.VoteRepository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -28,29 +17,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
-@AutoConfigureMockMvc
-@Transactional
-public class VoteControllerTest {
+public class VoteControllerTest extends AcceptanceTest {
 
     private final String URL = "/votes";
-
-    @Autowired
-    protected MockMvc mockMvc;
-
-    @Autowired
-    private VoteRepository voteRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    private User user;
-
-    @Before
-    public void setup() {
-        user = userRepository.save(User.builder().login("Jan").build());
-    }
 
     @Test
     public void findAllTest() throws Exception{
@@ -58,6 +27,7 @@ public class VoteControllerTest {
         Vote vote = Vote.builder()
                 .value(5)
                 .user(user)
+                .project(project)
                 .build();
         voteRepository.save(vote);
 

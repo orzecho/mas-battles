@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import eu.mdabrowski.battles.AcceptanceTest;
 import eu.mdabrowski.battles.domain.Project;
 import eu.mdabrowski.battles.domain.Team;
 import eu.mdabrowski.battles.persistance.ProjectRepository;
@@ -28,24 +29,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
-@AutoConfigureMockMvc
-@Transactional
-public class ProjectControllerTest {
+public class ProjectControllerTest extends AcceptanceTest {
 
     private final String URL = "/projects";
-
-    @Autowired
-    protected MockMvc mockMvc;
-
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private TeamRepository teamRepository;
-
-    private Team team;
 
     @Before
     public void setup() {
@@ -55,11 +41,6 @@ public class ProjectControllerTest {
     @Test
     public void findAllTest() throws Exception{
         //given
-        Project project = Project.builder()
-                .name("Test")
-                .team(team)
-                .build();
-        projectRepository.save(project);
 
         //when
         ResultActions resultActions = mockMvc.perform(get(URL).contentType
@@ -77,11 +58,6 @@ public class ProjectControllerTest {
     @Test
     public void findOneTest() throws Exception{
         //given
-        Project project = Project.builder()
-                .name("Test")
-                .team(team)
-                .build();
-        project = projectRepository.save(project);
 
         //when
         ResultActions resultActions = mockMvc.perform(get(URL + "//" + project.getId())
@@ -97,11 +73,6 @@ public class ProjectControllerTest {
     @Test
     public void deleteTest() throws Exception{
         //given
-        Project project = Project.builder()
-                .name("Test")
-                .team(team)
-                .build();
-        project = projectRepository.save(project);
 
         //when
         ResultActions resultActions = mockMvc.perform(delete(URL + "//" + project.getId())
@@ -117,11 +88,6 @@ public class ProjectControllerTest {
     @Test
     public void updateTest() throws Exception{
         //given
-        Project project = Project.builder()
-                .name("Test")
-                .team(team)
-                .build();
-        project = projectRepository.save(project);
 
         //when
         ResultActions resultActions = mockMvc.perform(put(URL + "//" + project.getId())

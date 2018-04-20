@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import eu.mdabrowski.battles.AcceptanceTest;
 import eu.mdabrowski.battles.domain.Comment;
 import eu.mdabrowski.battles.domain.User;
 import eu.mdabrowski.battles.persistance.CommentRepository;
@@ -30,39 +31,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
-@AutoConfigureMockMvc
-@Transactional
-@WithMockUser
-public class CommentControllerTest {
+public class CommentControllerTest extends AcceptanceTest {
 
     private final String URL = "/comments";
 
-    @Autowired
-    protected MockMvc mockMvc;
-
-    @Autowired
-    private CommentRepository commentRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    private User user;
-
-    @Before
-    public void setup() {
-        user = userRepository.save(User.builder().login("Jan").build());
-    }
 
     @Test
     public void findAllTest() throws Exception{
         //given
-        Comment comment = Comment.builder()
-                .content("Test")
-                .user(user)
-                .build();
-        commentRepository.save(comment);
 
         //when
         ResultActions resultActions = mockMvc.perform(get(URL).contentType(MediaType.APPLICATION_JSON_VALUE));
@@ -79,11 +55,6 @@ public class CommentControllerTest {
     @Test
     public void findOneTest() throws Exception{
         //given
-        Comment comment = Comment.builder()
-                .content("Test")
-                .user(user)
-                .build();
-        comment = commentRepository.save(comment);
 
         //when
         ResultActions resultActions = mockMvc.perform(get(URL + "//" + comment.getId())
@@ -100,11 +71,6 @@ public class CommentControllerTest {
     @Test
     public void deleteTest() throws Exception{
         //given
-        Comment comment = Comment.builder()
-                .content("Test")
-                .user(user)
-                .build();
-        comment = commentRepository.save(comment);
 
         //when
         ResultActions resultActions = mockMvc.perform(delete(URL + "//" + comment.getId())
@@ -120,11 +86,6 @@ public class CommentControllerTest {
     @Test
     public void updateTest() throws Exception{
         //given
-        Comment comment = Comment.builder()
-                .content("Test")
-                .user(user)
-                .build();
-        comment = commentRepository.save(comment);
 
         //when
         ResultActions resultActions = mockMvc.perform(put(URL + "//" + comment.getId())
@@ -142,7 +103,6 @@ public class CommentControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = {"USER"})
     public void createTest() throws Exception{
         //given
         //when

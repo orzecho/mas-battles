@@ -25,6 +25,7 @@ repositories {
 
 
 dependencies {
+	compile group: 'io.vavr', name: 'vavr', version: '0.9.2'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.0.0.RELEASE'
 	compile 'org.springframework.security:spring-security-test'
 	compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.3.0.RELEASE'
@@ -37,5 +38,6 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-web")
 	compile("com.h2database:h2")
 	compileOnly('org.projectlombok:lombok')
+	testCompile('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
