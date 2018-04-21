@@ -48,7 +48,7 @@ public class TeamControllerTest extends AcceptanceTest {
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.team").exists())
                 .andExpect(jsonPath("$.team.id").exists())
-                .andExpect(jsonPath("$.team.name").value("Test team"));
+                .andExpect(jsonPath("$.team.name").value("Test Team"));
     }
 
     @Test
