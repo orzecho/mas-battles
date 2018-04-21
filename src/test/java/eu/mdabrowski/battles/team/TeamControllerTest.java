@@ -24,10 +24,6 @@ public class TeamControllerTest extends AcceptanceTest {
     @Test
     public void findAllTest() throws Exception{
         //given
-        Team team = Team.builder()
-                .name("Test")
-                .build();
-        teamRepository.save(team);
 
         //when
         ResultActions resultActions = mockMvc.perform(get(URL).contentType(MediaType.APPLICATION_JSON_VALUE));
@@ -43,10 +39,6 @@ public class TeamControllerTest extends AcceptanceTest {
     @Test
     public void findOneTest() throws Exception{
         //given
-        Team team = Team.builder()
-                .name("Test")
-                .build();
-        team = teamRepository.save(team);
 
         //when
         ResultActions resultActions = mockMvc.perform(get(URL + "//" + team.getId())
@@ -56,16 +48,12 @@ public class TeamControllerTest extends AcceptanceTest {
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.team").exists())
                 .andExpect(jsonPath("$.team.id").exists())
-                .andExpect(jsonPath("$.team.name").value("Test"));
+                .andExpect(jsonPath("$.team.name").value("Test team"));
     }
 
     @Test
     public void deleteTest() throws Exception{
         //given
-        Team team = Team.builder()
-                .name("Test")
-                .build();
-        team = teamRepository.save(team);
 
         //when
         ResultActions resultActions = mockMvc.perform(delete(URL + "//" + team.getId())
@@ -81,10 +69,6 @@ public class TeamControllerTest extends AcceptanceTest {
     @Test
     public void updateTest() throws Exception{
         //given
-        Team team = Team.builder()
-                .name("Test")
-                .build();
-        team = teamRepository.save(team);
 
         //when
         ResultActions resultActions = mockMvc.perform(put(URL + "//" + team.getId())

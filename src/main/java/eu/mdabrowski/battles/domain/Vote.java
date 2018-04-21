@@ -1,6 +1,5 @@
 package eu.mdabrowski.battles.domain;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -15,7 +14,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.SneakyThrows;
 
 @Getter
 @Setter
@@ -72,6 +70,8 @@ public class Vote extends BaseEntity {
 
     public void setProject(Project project) {
         this.project = project;
-        project.addVote(this);
+        if(!project.getVotes().contains(this)) {
+            project.addVote(this);
+        }
     }
 }
