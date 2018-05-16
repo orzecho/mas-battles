@@ -7,6 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Builder
-public class Battle extends BaseEntity implements Votable, Commentable, Taggable {
+public class Battle extends BaseEntity implements Votable, Commentable, Taggable, TimedEvent {
+    public static final String LABEL_PLURAL = "battles";
+    public static final String LABEL_SINGULAR = "battle";
     @OneToMany
     private Set<Team> teams;
 
@@ -41,4 +44,7 @@ public class Battle extends BaseEntity implements Votable, Commentable, Taggable
     private Set<Tag> tags;
 
     BattleStatus battleStatus;
+
+    @OneToOne
+    private Timetable timetable;
 }

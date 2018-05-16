@@ -5,13 +5,12 @@ import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
+import javax.persistence.OneToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -51,19 +50,59 @@ public class Project extends BaseEntity implements Votable, Commentable, Taggabl
     @ManyToMany
     private Set<Tag> tags;
 
-    @Embedded
+    @OneToOne(mappedBy = "project")
     private SongProject songProject;
 
-    @Embedded
+    public void setSongProject(SongProject songProject){
+        if(songProject != null) {
+            this.songProject = songProject;
+            this.songProject.setProject(this);
+        } else {
+            if(this.songProject != null) {
+                this.songProject.setProject(null);
+            }
+            this.songProject = null;
+        }
+    }
+
+    @OneToOne(mappedBy = "project")
     private DubbingProject dubbingProject;
 
-    @Embedded
+    public void setDubbingProject(DubbingProject dubbingProject){
+        if(dubbingProject != null) {
+            this.dubbingProject = dubbingProject;
+            this.dubbingProject.setProject(this);
+        } else {
+            if(this.dubbingProject != null) {
+                this.dubbingProject.setProject(null);
+            }
+            this.dubbingProject = null;
+        }
+    }
+
+    @OneToOne(mappedBy = "project")
     private OtherProject otherProject;
+
+    public void setOtherProject(OtherProject otherProject){
+        if(otherProject != null) {
+            this.otherProject = otherProject;
+            this.otherProject.setProject(this);
+        } else {
+            if(this.otherProject != null) {
+                this.otherProject.setProject(null);
+            }
+            this.otherProject = null;
+        }
+    }
 
     //MAS kwalifikowana
     public Vote getVoteByUser(User user) {
-        return Optional.ofNullable(votes).map(e -> e.stream().filter(f -> f.getUser().equals(user)).findFirst()
-                .orElse(null)).orElse(null);
+        return Optional.ofNullable(votes)
+                .map(e -> e.stream()
+                        .filter(f -> f.getUser().equals(user))
+                        .findFirst()
+                        .orElse(null))
+                .orElse(null);
     }
 
     public void addVote(@Valid Vote vote) {

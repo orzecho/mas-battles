@@ -1,8 +1,8 @@
 package eu.mdabrowski.battles.domain;
 
+import java.time.LocalDate;
+
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,12 +14,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
-public class SongProject extends BaseEntity{
-    @OneToOne
-    @JoinColumn(name="project_id", unique = true, nullable = false)
-    Project project;
+@Builder
+public class Timetable extends BaseEntity {
+    private LocalDate startDate;
 
-    private String artist;
+    private LocalDate endDate;
 }

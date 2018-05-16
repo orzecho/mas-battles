@@ -10,10 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import eu.mdabrowski.battles.domain.DubbingProject;
+import eu.mdabrowski.battles.domain.OtherProject;
 import eu.mdabrowski.battles.domain.Project;
 import eu.mdabrowski.battles.domain.Team;
 import eu.mdabrowski.battles.domain.User;
 import eu.mdabrowski.battles.domain.Vote;
+import eu.mdabrowski.battles.persistance.DubbingProjectRepository;
+import eu.mdabrowski.battles.persistance.OtherProjectRepository;
 import eu.mdabrowski.battles.persistance.ProjectRepository;
 import eu.mdabrowski.battles.persistance.TeamRepository;
 import eu.mdabrowski.battles.persistance.UserRepository;
@@ -36,6 +40,13 @@ public class ProjectDomainTest {
 
     @Autowired
     private TeamRepository teamRepository;
+
+    @Autowired
+    private DubbingProjectRepository dubbingProjectRepository;
+
+    @Autowired
+    private OtherProjectRepository otherProjectRepository;
+
 
     @Test
     public void cascadeDeletionTest() {
@@ -86,4 +97,43 @@ public class ProjectDomainTest {
 
         voteRepository.findAll();
     }
+
+    @Test(expected = Exception.class)
+    public void testDubbingProjectWithoutProject() {
+        dubbingProjectRepository.save(DubbingProject.builder()
+                .original("Test original")
+                .build());
+
+        dubbingProjectRepository.findAll();
+    }
+
+    @Test
+    public void testDubbingToOtherProject() {
+        Team team = teamRepository.save(Team.builder()
+                .name("test team")
+                .build());
+
+        Project project = projectRepository.save(Project.builder()
+                .name("test project")
+                .team(team)
+                .votes(new HashSet<>())
+                .build());
+
+        DubbingProject dubbingProject = dubbingProjectRepository.save(DubbingProject.builder()
+                .project(project)
+                .original("Dubbing original")
+                .build());
+
+        project.setDubbingProject(dubbingProject);
+
+        OtherProject otherProject = otherProjectRepository.save(OtherProject.builder().description("test")
+                .project(project).build());
+
+        project.setOtherProject(otherProject);
+        project.setDubbingProject(null);
+        dubbingProjectRepository.delete(dubbingProject);
+
+        projectRepository.findAll();
+    }
+
 }

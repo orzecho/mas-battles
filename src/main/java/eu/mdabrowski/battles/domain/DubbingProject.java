@@ -1,6 +1,9 @@
 package eu.mdabrowski.battles.domain;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +16,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Embeddable
-public class DubbingProject {
+@Entity
+public class DubbingProject extends BaseEntity {
+    @OneToOne
+    @JoinColumn(name="project_id", unique = true, nullable = false)
+    Project project;
+
     private String original;
 }

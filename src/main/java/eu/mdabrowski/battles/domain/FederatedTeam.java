@@ -18,6 +18,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @Entity
+//MAS bag, ordered
 public class FederatedTeam extends BaseEntity {
     private LocalDate startDate;
 

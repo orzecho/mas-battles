@@ -27,13 +27,6 @@ import lombok.Setter;
                 , @UniqueConstraint(columnNames={"project_id", "id"})}
 )
 public class Vote extends BaseEntity {
-//    @PostConstruct
-//    @SneakyThrows
-//    public void validate(){
-//        if(!isVotableNotNull()) throw new Exception();
-//        if(!isOnlyOneVotable()) throw new Exception();
-//    }
-
     @NotNull
     @ManyToOne
     @JoinColumn(name="user_id")
@@ -60,6 +53,7 @@ public class Vote extends BaseEntity {
         return battle != null || topic != null || project != null;
     }
 
+    //MAS XOR
     @AssertTrue
     @Transient
     public boolean isOnlyOneVotable() {

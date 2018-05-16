@@ -35,6 +35,14 @@ public class CommentControllerTest extends AcceptanceTest {
 
     private final String URL = "/comments";
 
+    @Before
+    public void init() {
+        user = userRepository.save(User.builder().login("Jan").build());
+        comment = commentRepository.save(Comment.builder()
+                .content("Test")
+                .user(user)
+                .build());
+    }
 
     @Test
     public void findAllTest() throws Exception{

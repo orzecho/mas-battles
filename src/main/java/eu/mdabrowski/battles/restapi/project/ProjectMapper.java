@@ -1,32 +1,27 @@
 package eu.mdabrowski.battles.restapi.project;
 
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
-import eu.mdabrowski.battles.domain.Comment;
 import eu.mdabrowski.battles.domain.Project;
-import eu.mdabrowski.battles.domain.Tag;
 import eu.mdabrowski.battles.persistance.CommentRepository;
 import eu.mdabrowski.battles.persistance.TagRepository;
 import eu.mdabrowski.battles.persistance.TeamRepository;
-import static eu.mdabrowski.battles.restapi.MapperUtil.setToIds;
+import eu.mdabrowski.battles.persistance.VoteRepository;
+import eu.mdabrowski.battles.restapi.mapper.AbstractMapper;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class ProjectMapper {
+public class ProjectMapper extends AbstractMapper<Project, ProjectDTO> {
 
     private final CommentRepository commentRepository;
     private final TagRepository tagRepository;
     private final TeamRepository teamRepository;
+    private final VoteRepository voteRepository;
 
     public ProjectDTO toDTO(Project project) {
         return ProjectDTO.builder()
@@ -42,28 +37,12 @@ public class ProjectMapper {
     public Project fromDTO(ProjectDTO projectDTO) {
         return Project.builder()
                 .name(projectDTO.getName())
-                .team(teamRepository.findById(projectDTO.getTeam()).orElseThrow(EntityNotFoundException::new))
                 .comments(getCommentsFromIds(projectDTO.getComments(), commentRepository))
                 .tags(getTagsFromIds(projectDTO.getTags(), tagRepository))
+                .votes(getVotesFromIds(projectDTO.getVotes(), voteRepository))
                 .team(Optional.ofNullable(projectDTO.getTeam()).map(teamId -> teamRepository.findById(teamId)
                         .orElseThrow(EntityNotFoundException::new)).orElse(null))
                 .build();
-    }
-
-    private Set<Comment> getCommentsFromIds(Set<Long> ids, JpaRepository<Comment, Long> repository) {
-        if(ids == null || ids.isEmpty()){
-            return new HashSet<>();
-        } else {
-            return new HashSet<>(repository.findAllById(ids));
-        }
-    }
-
-    private Set<Tag> getTagsFromIds(Set<Long> ids, JpaRepository<Tag, Long> repository) {
-        if(ids == null || ids.isEmpty()) {
-            return new HashSet<>();
-        } else {
-            return new HashSet<>(repository.findAllById(ids));
-        }
     }
 
     public Project update(ProjectDTO projectDTO, Project project) {
