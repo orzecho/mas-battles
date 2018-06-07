@@ -22,5 +22,7 @@ public class TeamDTO {
     @NotNull
     private String name;
 
+    private Long leader;
+
     Set<Long> users;
 }

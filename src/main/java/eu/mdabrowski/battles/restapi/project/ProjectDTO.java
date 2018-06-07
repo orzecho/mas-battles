@@ -22,8 +22,12 @@ public class ProjectDTO {
     @NotNull
     private String name;
 
+    private String description;
+
     @NotNull
     private Long team;
+
+    private Long battle;
 
     private Set<Long> votes;
 

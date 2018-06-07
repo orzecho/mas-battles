@@ -2,6 +2,7 @@ package eu.mdabrowski.battles.domain;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
@@ -21,7 +22,7 @@ import lombok.Setter;
 public class Topic extends BaseEntity implements Votable, Commentable{
     private String value;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Vote> votes;
 
     @OneToMany

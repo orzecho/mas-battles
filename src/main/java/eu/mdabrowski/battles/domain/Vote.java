@@ -33,7 +33,7 @@ public class Vote extends BaseEntity {
     private User user;
 
     @NotNull
-    private Integer value;
+    private Double value;
 
     @ManyToOne
     @JoinColumn(name = "battle_id")

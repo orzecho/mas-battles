@@ -35,10 +35,16 @@ public class Project extends BaseEntity implements Votable, Commentable, Taggabl
     @NotBlank
     private String name;
 
+    private String description;
+
     @NotNull
     @ManyToOne
     @JoinColumn(name="team_id", nullable = false)
     private Team team;
+
+    @ManyToOne
+    @JoinColumn(name="battle_id")
+    private Battle battle;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @Association(name = "has votes", ourMultiplicity = "1", theirMultiplicity = "0..2")

@@ -22,4 +22,6 @@ public class SongProject extends BaseEntity{
     Project project;
 
     private String artist;
+
+    private String origin;
 }

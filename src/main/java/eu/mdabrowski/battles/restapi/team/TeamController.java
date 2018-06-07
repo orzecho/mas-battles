@@ -1,5 +1,7 @@
 package eu.mdabrowski.battles.restapi.team;
 
+import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,9 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import eu.mdabrowski.battles.domain.Project;
 import eu.mdabrowski.battles.domain.Team;
+import eu.mdabrowski.battles.domain.User;
 import eu.mdabrowski.battles.persistance.TeamRepository;
+import eu.mdabrowski.battles.persistance.UserRepository;
 import eu.mdabrowski.battles.restapi.wrapper.ResponseListWrapper;
 import eu.mdabrowski.battles.restapi.wrapper.ResponseWrapper;
+import eu.mdabrowski.battles.security.UserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -32,6 +37,8 @@ public class TeamController {
 
     private final TeamRepository teamRepository;
     private final TeamMapper teamMapper;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
     @GetMapping
     public ResponseListWrapper<TeamDTO> getTeams() {
@@ -52,9 +59,15 @@ public class TeamController {
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
-    public ResponseWrapper<TeamDTO> createTeam(@Valid @RequestBody Map<String, TeamDTO> teamDTO) {
+    public ResponseWrapper<TeamDTO> createTeam(Principal principal, @Valid @RequestBody Map<String, TeamDTO> teamDTO) {
         Team team = teamMapper.fromDTO(teamDTO.get("team"));
+        User currentUser = userService.getCurrentUser(principal);
+        team.setUsers(new HashSet<>());
+        team.getUsers().add(currentUser);
+        team.setLeader(currentUser);
         Team savedTeam = teamRepository.save(team);
+        currentUser.setTeam(savedTeam);
+        userRepository.save(currentUser);
         TeamDTO savedTeamDTO = teamMapper.toDTO(savedTeam);
         return new ResponseWrapper<>(savedTeamDTO, "team");
     }
@@ -70,8 +83,9 @@ public class TeamController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
-    public ResponseEntity deleteTeam(@PathVariable Long id) {
+    public ResponseWrapper<TeamDTO> deleteTeam(@PathVariable Long id) {
+        TeamDTO teamDTO = teamMapper.toDTO(teamRepository.findById(id).get());
         teamRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+        return new ResponseWrapper<>(teamDTO, "team");
     }
 }

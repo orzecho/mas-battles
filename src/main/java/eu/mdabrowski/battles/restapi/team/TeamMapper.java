@@ -9,6 +9,7 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
+import eu.mdabrowski.battles.domain.BaseEntity;
 import eu.mdabrowski.battles.domain.Comment;
 import eu.mdabrowski.battles.domain.Project;
 import eu.mdabrowski.battles.domain.Tag;
@@ -33,13 +34,17 @@ public class TeamMapper {
                 .id(team.getId())
                 .name(team.getName())
                 .users(setToIds(team.getUsers()))
+                .leader(Optional.ofNullable(team.getLeader()).map(BaseEntity::getId).orElse(null))
                 .build();
     }
 
     public Team fromDTO(TeamDTO teamDTO) {
         return Team.builder()
                 .name(teamDTO.getName())
-                .users(getUsersFromIds(teamDTO.getUsers(), userRepository))
+//                .users(getUsersFromIds(teamDTO.getUsers(), userRepository))
+                .leader(Optional.ofNullable(teamDTO.getLeader()).map(leader -> userRepository.findById(leader)
+                        .orElseThrow(EntityNotFoundException::new))
+                        .orElse(null))
                 .build();
     }
 
@@ -55,7 +60,8 @@ public class TeamMapper {
         Team teamFromDTO = fromDTO(teamDTO);
 
         team.setName(teamFromDTO.getName());
-        team.setUsers(teamFromDTO.getUsers());
+//        team.setUsers(teamFromDTO.getUsers());
+        team.setLeader(teamFromDTO.getLeader());
 
         return team;
     }

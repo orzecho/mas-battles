@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Transient;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
@@ -47,6 +48,7 @@ public class Team extends BaseEntity {
     @AssertTrue
     @Transient
     private boolean isLeaderInUsers() {
+
         return users != null ? users.contains(leader) : leader == null;
     }
 
@@ -57,5 +59,10 @@ public class Team extends BaseEntity {
                 .sorted(Comparator.comparing(FederatedTeam::getStartDate))
                 .map(FederatedTeam::getFederation)
                 .collect(Collectors.toList());
+    }
+
+    @PreRemove
+    private void preRemove() {
+        users.forEach((e -> e.setTeam(null)));
     }
 }

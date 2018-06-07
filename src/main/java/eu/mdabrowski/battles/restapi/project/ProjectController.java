@@ -38,7 +38,7 @@ public class ProjectController {
     private final ProjectMapper projectMapper;
 
     @GetMapping
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("isAuthenticated()")
     public ResponseListWrapper<ProjectDTO> getProjects(Principal principal) {
         List<Project> projects = projectRepository.findAll();
         List<ProjectDTO> projectDTOs = projects.stream()
@@ -48,7 +48,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("isAuthenticated()")
     public ResponseWrapper<ProjectDTO> getProject(@PathVariable Long id) {
         return new ResponseWrapper<>(projectRepository
                 .findById(id)
@@ -66,8 +66,7 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}")
-//    @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ROLE_BATTLE_USER')")
     public ResponseWrapper<ProjectDTO> updateProject(@PathVariable Long id, @Valid @RequestBody Map<String, ProjectDTO>
             projectDTO, Principal principal) {
         Project oldProject = projectRepository.findById(id).orElseThrow(EntityNotFoundException::new);
@@ -80,14 +79,5 @@ public class ProjectController {
     public ResponseEntity deleteProject(@PathVariable Long id) {
         projectRepository.deleteById(id);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/test")
-    @PreAuthorize("permitAll()")
-    public boolean test() {
-        Team team = teamRepository.save(Team.builder().name("Testowa drużyna").build());
-        Project project = Project.builder().name("Test").team(team).build();
-        projectRepository.save(project);
-        return true;
     }
 }

@@ -1,10 +1,11 @@
-package eu.mdabrowski.battles.restapi.vote;
+package eu.mdabrowski.battles.restapi.topic;
+
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,12 +15,17 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class VoteDTO {
+public class TopicDTO {
     private Long id;
 
     @NotNull
-    Long user;
+    private String value;
 
-    @NotNull
-    private Double value;
+    private Integer numberOfVotes;
+
+    private Double meanVote;
+
+    private Set<Long> comments;
+
+    private Set<Long> battles;
 }
